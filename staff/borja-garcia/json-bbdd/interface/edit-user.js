@@ -18,12 +18,28 @@ const template =[
         tupple.shift();
         if (tupple.length > 0) prompt(tupple, id);
         else {
-            users.updateById(id, user);
-            rl.close();
+            users.updateById(id, user, (err) => {
+              if (err) throw err;
+            });
+          rl.close();
         }
     });
   }
 
-  rl.question('¿Cuál es el ID del usuario que quieres editar=', (id) => {
-    prompt(tupple, Number(id));
-  });
+rl.question(
+  "Por favor, introduce el ID del usuario que quieres editar",
+  function (_id) {
+    const id = Number(_id);
+
+    if (
+      typeof id !== "number" ||
+      id < 0 ||
+      id === NaN ||
+      id === Infinity ||
+      !Number.isInteger(id)
+    ) {console.log ("Introduce un número válido");
+      return rl.close();
+    }
+    prompt(tupple, Number(id))
+  }
+);
