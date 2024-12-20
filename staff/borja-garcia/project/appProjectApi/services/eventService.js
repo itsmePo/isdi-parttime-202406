@@ -1,22 +1,40 @@
-const mongoose = require('mongoose');
-const Event = require('./models/event'); // Ruta al modelo
+import Event from "../models/events.js";
+import User from "../models/users.js";
+// Crear un evento
+export const createEvent = async (eventObject) => {
+  const { userId, ...eventData } = eventObject;
 
-mongoose.connect('mongodb://localhost:27017/eventsDB', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-})
-  .then(() => console.log('Conectado a MongoDB'))
-  .catch(err => console.error('Error al conectar a MongoDB:', err));
+  // Verificar si el usuario existe
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new Error("Usuario no encontrado");
+  }
 
-// Crear un evento de ejemplo
-const newEvent = new Event({
-  eventName: 'Reunión de equipo',
-  startDateTime: new Date('2024-12-20T10:00:00'), // Fecha y hora de inicio
-  duration: 120, // Duración en minutos
-  color: '#FF5733', // Color en formato HEX
-});
+  // Crear y guardar el evento
+  const event = new Event({ ...eventData, user: userId });
+  const savedEvent = await event.save();
 
-newEvent.save()
-  .then(event => console.log('Evento creado:', event))
-  .catch(err => console.error('Error al crear el evento:', err));
+  // Asociar el evento al usuario
+  user.events = user.events || [];
+  user.events.push(savedEvent._id); // Asegúrate de que el esquema del usuario tenga el campo `events`
+  await user.save();
+
+  return savedEvent;
+};
+
+// Obtener todos los eventos
+export const getEvents = async () => {
+  return await Event.find();
+};
+
+export const deleteEventById = async (eventId) => {
+  return await Event.findByIdAndDelete(eventId);
+}
+
+export const updateEventById = async (eventId, updatedEvent) => {
+  return await Event.findByIdAndUpdate(eventId, updatedEvent, { new: true });
+}
+
+export const getEventById = async (eventId) => {
+  return await Event.findById(eventId);
+}

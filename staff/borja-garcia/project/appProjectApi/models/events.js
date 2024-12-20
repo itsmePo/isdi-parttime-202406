@@ -1,4 +1,4 @@
-const mongoose = require('mongoose'); 
+import mongoose from 'mongoose'; 
 
 // Crear un esquema para el evento
 const eventSchema = new mongoose.Schema({
