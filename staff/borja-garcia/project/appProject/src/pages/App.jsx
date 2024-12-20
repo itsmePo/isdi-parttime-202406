@@ -1,5 +1,5 @@
-import Counter from '/src/components/Counter';
-import CalendarComponent from '/src/components/Calendar';
+// import Counter from '/src/components/Counter';
+// import CalendarComponent from '/src/components/Calendar';
 import { Route, Routes } from 'react-router';
 import Private from './Private';
 import Public from './Public';
