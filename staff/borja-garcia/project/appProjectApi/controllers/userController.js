@@ -1,6 +1,5 @@
 import express from "express";
 import { createUser, deleteUserById, getUserById, getUsers, updateUserById } from "../services/userService.js"; // Importa funciones del controlador
-import User from "../models/users.js";
 
 const router = express.Router();
 
