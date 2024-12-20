@@ -1,22 +1,79 @@
-const mongoose = require('mongoose');
-const Event = require('./models/event'); // Ruta al modelo
+// import express from "express";
+// import { createEvent, deleteEventById, getEventById, getEvents, updateEventById } from "../services/eventService.js"; // Importa funciones del controlador
+// import Event from "../models/events.js";
 
-mongoose.connect('mongodb://localhost:27017/eventsDB', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-})
-  .then(() => console.log('Conectado a MongoDB'))
-  .catch(err => console.error('Error al conectar a MongoDB:', err));
+// const router = express.Router();
 
-// Crear un evento de ejemplo
-const newEvent = new Event({
-  eventName: 'Reunión de equipo',
-  startDateTime: new Date('2024-12-20T10:00:00'), // Fecha y hora de inicio
-  duration: 120, // Duración en minutos
-  color: '#FF5733', // Color en formato HEX
-});
+// // Crear un usuario
+// router.post("/", async (req, res) => {
+//   try {
+//     const { email, username, password } = req.body;
+//     const user = await createUser(email, username, password);
+//     res.status(200).json({ message: 'Usuario creado correctamente' });
+//   } catch (error) {
+//     res.status(400).json({ error: error.message });
+//   }
+// });
 
-newEvent.save()
-  .then(event => console.log('Evento creado:', event))
-  .catch(err => console.error('Error al crear el evento:', err));
+// // Obtener todos los usuarios
+// router.get("/", async (req, res) => {
+//   try {
+//     const users = await getUsers();
+//     res.json(users);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
+
+// router.delete('/:userId', async (req, res) => {
+//   try {
+//     const { userId } = req.params; // Captura el parámetro dinámico desde la ruta
+//     const deletedUser = await deleteUserById(userId); // Busca y elimina el usuario por su ID
+
+//     if (!deletedUser) {
+//       return res.status(404).json({ message: 'Usuario no encontrado' }); // Respuesta si el usuario no existe
+//     }
+
+//     res.status(200).json({ message: 'Usuario eliminado correctamente' });
+//   } catch (error) {
+//     res.status(400).json({ error: error.message }); // Manejo de errores
+//   }
+// });
+
+// router.get('/:userId', async (req, res) => {
+//   try {
+//     const { userId } = req.params; // Captura el parámetro dinámico desde la ruta
+//     const fetchUserById = await getUserById(userId); // Busca y elimina el usuario por su ID
+
+//     if (!fetchUserById) {
+//       return res.status(404).json({ message: 'Usuario no encontrado' }); // Respuesta si el usuario no existe
+//     }
+
+//     res.json(fetchUserById);
+//   } catch (error) {
+//     res.status(400).json({ error: error.message }); // Manejo de errores
+//   }
+// });
+
+// router.put('/:userId', async (req, res) => {
+//   try {
+//     const { userId } = req.params; // Captura el parámetro dinámico desde la ruta
+//     const { email, username, password } = req.body;
+//     const updateUser = {
+//       email,
+//       username,
+//       password,
+//     };
+//     const modifyUserById = await updateUserById(userId, updateUser); // Busca y modifica el usuario por su ID
+
+//     if (!modifyUserById) {
+//       return res.status(404).json({ message: 'Usuario no encontrado' }); // Respuesta si el usuario no existe
+//     }
+
+//     res.status(200).json({ message: 'Usuario modificado correctamente' });
+//   } catch (error) {
+//     res.status(400).json({ error: error.message }); // Manejo de errores
+//   }
+// });
+
+// export default router;

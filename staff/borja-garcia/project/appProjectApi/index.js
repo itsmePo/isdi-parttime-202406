@@ -1,8 +1,8 @@
 import "dotenv/config";
 import express from "express";
 import { connect } from "mongoose";
-import userRoutes from "./routes/userRoutes.js"; // Importar las rutas de usuarios
-
+import userController from "./controllers/userController.js"
+//import eventController from "./controllers/eventController.js"
 // Conexión a MongoDB
 connect(process.env.MONGODB_URI)
   .then(() => {
@@ -14,8 +14,9 @@ connect(process.env.MONGODB_URI)
     // Middleware para parsear JSON
     api.use(express.json());
 
-    // Rutas
-    api.use("/users", userRoutes); // Prefijo para las rutas de usuarios
+    // Controladores
+    api.use("/users", userController); // Prefijo para las rutas de usuarios
+    //api.use("/events", eventController);
 
     // Ruta base
     api.get("/", (req, res) => {

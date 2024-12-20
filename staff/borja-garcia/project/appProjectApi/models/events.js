@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'); 
 
 // Crear un esquema para el evento
 const eventSchema = new mongoose.Schema({
@@ -21,6 +21,11 @@ const eventSchema = new mongoose.Schema({
     default: null, // Campo no requerido
     match: /^#([0-9A-F]{3}){1,2}$/i, // Validación para color HEX (opcional)
   },
+  user: {  // Relación con el modelo User
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,  // Aseguramos que el evento esté vinculado a un usuario
+  }
 }, {
   timestamps: true, // Añade createdAt y updatedAt automáticamente
 });
@@ -28,4 +33,4 @@ const eventSchema = new mongoose.Schema({
 // Crear el modelo de evento
 const Event = mongoose.model('Event', eventSchema);
 
-module.exports = Event;
+export default Event;
