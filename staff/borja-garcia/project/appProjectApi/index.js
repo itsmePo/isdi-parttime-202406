@@ -1,8 +1,9 @@
 import "dotenv/config";
 import express from "express";
 import { connect } from "mongoose";
-import userController from "./controllers/userController.js"
-import eventController from "./controllers/eventController.js"
+import userController from "./controllers/userController.js";
+import eventController from "./controllers/eventController.js";
+import contactController from "./controllers/contactController.js";
 // Conexión a MongoDB
 connect(process.env.MONGODB_URI)
   .then(() => {
@@ -17,6 +18,7 @@ connect(process.env.MONGODB_URI)
     // Controladores
     api.use("/users", userController); // Prefijo para las rutas de usuarios
     api.use("/events", eventController);
+    api.use("/emergency-contacts", contactController); // Prefijo para las rutas de contactos de emergencia
 
     // Ruta base
     api.get("/", (req, res) => {

@@ -22,3 +22,9 @@ export const updateUserById = async (userId, updatedUser) => {
 export const getUserById = async (userId) => {
   return await User.findById(userId);
 }
+
+export const saveUserContact = async (user, contact) => {
+  user.contacts = user.contacts || []; // Comprobar para que tenga sentido
+  user.contacts.push(contact._id); // Asegúrate de que el esquema del usuario tenga el campo `contacts`
+  await user.save();
+}
