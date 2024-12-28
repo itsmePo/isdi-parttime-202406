@@ -32,7 +32,7 @@ router.post('/:userId', async (req, res) => {
   try {
     const { userId } = req.params; // Captura el parámetro dinámico desde la ruta
     const { contactName, phone, relationship } = req.body; //Perfeccionar***
-    const contactData = { contactName, phone, relationship }
+    const contactData = { contactName, phone, relationship };
     //const contactData = { name, phone, relationship };
     // Verificar que el usuario exista
     const user = await getUserById(userId);

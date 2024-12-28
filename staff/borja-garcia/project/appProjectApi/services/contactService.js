@@ -3,12 +3,14 @@ import Contact from "../models/contacts.js";
 import User from "../models/users.js";
 // Crear un contacto
 export const createContact = async (user, contactData) => {
-  
-  const userId = user._id;
 
-  const newContact = new EmergencyContact({ user: userId, contactData });
+  const newContact = new EmergencyContact({
+    user: user._id,
+    ...contactData
+  });
+
+  // Guardar y devolver el nuevo contacto
   return await newContact.save();
-
 };
 
 // Obtener todos los contactos
