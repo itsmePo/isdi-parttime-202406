@@ -1,25 +1,16 @@
 import Event from "../models/events.js";
-import User from "../models/users.js";
-// Crear un evento
+
 export const createEvent = async (eventObject) => {
+
   const { userId, ...eventData } = eventObject;
 
-  // Verificar si el usuario existe
-  const user = await User.findById(userId);
-  if (!user) {
-    throw new Error("Usuario no encontrado");
-  }
-
   // Crear y guardar el evento
-  const event = new Event({ ...eventData, user: userId });
-  const savedEvent = await event.save();
+  const event = new Event({ 
+    user: userId,
+    ...eventData 
+  });
 
-  // Asociar el evento al usuario
-  user.events = user.events || [];
-  user.events.push(savedEvent._id); // Asegúrate de que el esquema del usuario tenga el campo `events`
-  await user.save();
-
-  return savedEvent;
+return await event.save();
 };
 
 // Obtener todos los eventos
@@ -37,4 +28,8 @@ export const updateEventById = async (eventId, updatedEvent) => {
 
 export const getEventById = async (eventId) => {
   return await Event.findById(eventId);
+}
+
+export const getEventsByUserId = async (userId) => {
+  return await Event.find({ user: userId });
 }

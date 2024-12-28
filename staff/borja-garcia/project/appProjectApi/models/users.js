@@ -28,6 +28,12 @@ const userSchema = new mongoose.Schema({
       ref: 'Event',
     },
   ],
+  contacts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'EmergencyContact',
+    },
+  ]
 }, {
   timestamps: true, 
 });

@@ -28,3 +28,9 @@ export const saveUserContact = async (user, contact) => {
   user.contacts.push(contact._id); // Asegúrate de que el esquema del usuario tenga el campo `contacts`
   await user.save();
 }
+
+export const saveUserEvent = async (user, event) => {
+  user.events = user.events || []; // Comprobar para que tenga sentido
+  user.events.push(event._id); // Asegúrate de que el esquema del usuario tenga el campo `contacts`
+  await user.save();
+}

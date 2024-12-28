@@ -1,7 +1,5 @@
 import EmergencyContact from "../models/contacts.js";
-import Contact from "../models/contacts.js";
-import User from "../models/users.js";
-// Crear un contacto
+
 export const createContact = async (user, contactData) => {
 
   const newContact = new EmergencyContact({
@@ -15,17 +13,21 @@ export const createContact = async (user, contactData) => {
 
 // Obtener todos los contactos
 export const getContacts = async () => {
-  return await Contact.find();
+  return await EmergencyContact.find();
 };
 
 export const deleteContactById = async (contactId) => {
-  return await Contact.findByIdAndDelete(contactId);
+  return await EmergencyContact.findByIdAndDelete(contactId);
 }
 
 export const updateContactById = async (contactId, updatedContact) => {
-  return await Contact.findByIdAndUpdate(contactId, updatedContact, { new: true });
+  return await EmergencyContact.findByIdAndUpdate(contactId, updatedContact, { new: true });
 }
 
 export const getContactById = async (contactId) => {
-  return await Contact.findById(contactId);
+  return await EmergencyContact.findById(contactId);
+}
+
+export const getContactsByUserId = async (userId) => {
+  return await EmergencyContact.find({ user: userId });
 }
