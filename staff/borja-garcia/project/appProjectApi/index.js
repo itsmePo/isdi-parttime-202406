@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import { connect } from "mongoose";
+import cors from "cors";
 import userController from "./controllers/userController.js";
 import eventController from "./controllers/eventController.js";
 import contactController from "./controllers/contactController.js";
@@ -12,6 +13,7 @@ connect(process.env.MONGODB_URI)
     // Configuración de Express
     const api = express();
 
+    api.use(cors({ origin: 'http://localhost:5173' }));
     // Middleware para parsear JSON
     api.use(express.json());
 
