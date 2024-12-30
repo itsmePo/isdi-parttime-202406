@@ -38,7 +38,7 @@ const Form = () => {
             />
             <span className="text-center text-gray-600">
               ¿Ya eres miembro?{" "}
-              <a href="#" className="text-blue-600 font-medium">
+              <a href="/login" className="text-blue-600 font-medium">
                 ¡Inicia sesión aquí!
               </a>
             </span>

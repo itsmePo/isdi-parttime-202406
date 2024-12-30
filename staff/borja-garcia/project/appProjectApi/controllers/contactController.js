@@ -1,5 +1,4 @@
 import express from "express";
-import EmergencyContact from "../models/contacts.js"; // Ruta al modelo
 import {
   createContact,
   deleteContactById,
