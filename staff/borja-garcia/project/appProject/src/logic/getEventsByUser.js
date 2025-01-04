@@ -2,7 +2,13 @@ import * as Errors from "../../errors";
 
 const getEventsByUser = async (userId) => {
     try {
-        const response = await fetch(`/api/events/user/${userId}`);
+        const response = await fetch(`/api/events/user/${userId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        });
         if (!response.ok) {
             throw new Errors.ApiError("Error fetching events", response.status);
         }

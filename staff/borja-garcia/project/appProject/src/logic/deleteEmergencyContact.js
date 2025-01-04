@@ -6,6 +6,7 @@ const deleteEmergencyContactById = async (contactId) => {
       method: "DELETE",
       headers: {
         "Content-type": "application/json",
+        "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
       },
     });
 

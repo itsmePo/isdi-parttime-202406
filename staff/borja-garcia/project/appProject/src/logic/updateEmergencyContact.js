@@ -6,6 +6,7 @@ const updateEmergencyContact = async (contactName, phone, relationship, contactI
         method: "PUT",
         headers: {
           "Content-type": "application/json",
+          "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
         },
         body: JSON.stringify({ contactName, phone, relationship }),
       });

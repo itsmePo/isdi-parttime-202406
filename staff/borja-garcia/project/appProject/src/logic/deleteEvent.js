@@ -6,6 +6,7 @@ const deleteEventById = async (eventId) => {
       method: "DELETE",
       headers: {
         "Content-type": "application/json",
+        "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
       },
     });
 

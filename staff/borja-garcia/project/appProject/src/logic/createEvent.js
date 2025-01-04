@@ -6,6 +6,7 @@ const createEvent = async (eventName, startDateTime, duration, color, userId) =>
         method: "POST",
         headers: {
           "Content-type": "application/json",
+          "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
         },
         body: JSON.stringify({ eventName, startDateTime, duration, color }),
       });

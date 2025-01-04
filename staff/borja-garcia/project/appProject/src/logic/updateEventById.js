@@ -6,6 +6,7 @@ const updateEventById = async (eventName, startDateTime, duration, color, eventI
         method: "PUT",
         headers: {
           "Content-type": "application/json",
+          "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
         },
         body: JSON.stringify({ eventName, startDateTime, duration, color }),
       });

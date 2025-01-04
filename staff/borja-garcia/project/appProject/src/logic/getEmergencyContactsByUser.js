@@ -2,7 +2,13 @@ import * as Errors from "../../errors";
 
 const getEmerContByUser = async (userId) => {
     try {
-        const response = await fetch(`/api/emergency-contacts/user/${userId}`);
+        const response = await fetch(`/api/emergency-contacts/user/${userId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        })
         if (!response.ok) {
             throw new Errors.ApiError("Error fetching emergency contacts", response.status);
         }

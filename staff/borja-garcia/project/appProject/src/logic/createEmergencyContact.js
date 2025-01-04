@@ -6,6 +6,7 @@ const createEmergencyContact = async (contactName, phone, relationship, userId) 
         method: "POST",
         headers: {
           "Content-type": "application/json",
+          "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
         },
         body: JSON.stringify({ contactName, phone, relationship }),
       });
