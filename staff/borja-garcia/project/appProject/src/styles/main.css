@@ -1,9 +1,9 @@
 body {
+  height: 100%;  /* Garantiza que el cuerpo ocupe toda la altura */
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   overflow-x: hidden; /* Asegura que no haya desbordamiento horizontal */
-  min-height: 100vh;  /* Garantiza que el cuerpo ocupe toda la altura */
 }
 
 *,

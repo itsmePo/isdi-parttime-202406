@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 const Home = () => {
   return (
     <div className="flex justify-center items-center h-screen bg-gradient-to-b from-blue-900 via-purple-700 to-pink-800">
@@ -23,12 +24,12 @@ const Home = () => {
               🌟 Opciones
             </li>
             <li>
-              <a
+              <Link
+                to="/calendar"
                 className="block px-4 py-2 rounded-md hover:bg-blue-100 transition-all duration-200"
-                href="#"
               >
-                ➡️ Opción 1
-              </a>
+                ➡️ Calendario
+              </Link>
             </li>
             <li>
               <a
