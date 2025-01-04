@@ -1,13 +1,13 @@
 import * as Errors from "../../errors";
 
-const createUser = async (username, email, password) => {
+const createUser = async (username, email, password, repeatPassword) => {
   try {
     const response = await fetch(`/api/users`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",
       },
-      body: JSON.stringify({ username, email, password }),
+      body: JSON.stringify({ username, email, password, repeatPassword }),
     });
 
     if (!response.ok) {

@@ -1,5 +1,4 @@
-import SignIn from './publicPages/SignIn';
-import RegisterUser from './publicPages/RegisterUser';
+import RegisterUser from '../components/Forms/RegisterForm';
 import NotFound from './NotFound';
 import { Route, Routes } from 'react-router';
 import Login from '../components/Forms/LoginForm';
