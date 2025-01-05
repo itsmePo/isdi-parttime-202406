@@ -32,12 +32,12 @@ const Home = () => {
               </Link>
             </li>
             <li>
-              <a
+              <Link
+                to="/emergency-contacts"
                 className="block px-4 py-2 rounded-md hover:bg-blue-100 transition-all duration-200"
-                href="#"
               >
-                ➡️ Opción 2
-              </a>
+                ➡️ Contactos
+              </Link>
             </li>
           </ul>
         </div>

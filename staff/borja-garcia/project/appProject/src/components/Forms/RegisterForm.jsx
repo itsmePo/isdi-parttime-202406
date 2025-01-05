@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import createUser from "../../logic/registerUser";
-import "../../styles/main.css"
+import "../../styles/main.css";
 
 const RegisterUser = () => {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ const RegisterUser = () => {
       <div className="card">
         <div className="header">
           <h1>¡Únete ahora!</h1>
-          <p>Regístrate y comienza a disfrutar</p>
+          <p>¡Regístrate ya!</p>
         </div>
         {error && <div className="error">{error}</div>}
         <form onSubmit={handleSubmit} className="form">
