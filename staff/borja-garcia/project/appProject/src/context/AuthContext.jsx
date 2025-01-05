@@ -17,8 +17,19 @@ export const AuthProvider = ({ children }) => {
     sessionStorage.removeItem("token");
   };
 
-  const userId = token ? jwtDecode(token).userId : null;
+  let userId = null;
 
+  if (token && typeof token === "string") {
+    try {
+      const decoded = jwtDecode(token);
+      userId = decoded.userId; // Asume que el token tiene un campo `userId`
+    } catch (error) {
+      console.error("Error al decodificar el token:", error.message);
+      logout(); // Limpia el token inválido
+    }
+  }
+
+console.log(token);
   return (
     <AuthContext.Provider value={{ token, login, logout, userId }}>
       {children}
@@ -35,3 +46,5 @@ AuthProvider.propTypes = {
 export const useAuth = () => {
   return useContext(AuthContext);
 };
+
+export default AuthProvider;

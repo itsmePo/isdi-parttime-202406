@@ -18,7 +18,8 @@ router.post("/users/:userId", async (req, res) => {
       startDateTime: req.body.startDateTime,
       duration: req.body.duration,
       color: req.body.color,
-      userId: req.params.userId,
+      category: req.body.category,
+      userId: req.params.userId
     };
 
     // Verifica que el usuario exista
@@ -30,7 +31,7 @@ router.post("/users/:userId", async (req, res) => {
     const savedEvent = await createEvent(eventData);
     await saveUserEvent(user, savedEvent); // Guarda el evento en la base de datos
 
-    res.status(201).json({ message: "Evento creado correctamente" });
+    res.status(200).json({ message: "Evento creado correctamente" });
   } catch (error) {
     res.status(500).json({ message: "Error al crear el evento" });
   }
@@ -106,6 +107,7 @@ router.put("/:id", async (req, res) => {
       startDateTime: req.body.startDateTime,
       duration: req.body.duration,
       color: req.body.color,
+      category: req.body.category
     };
     const modifyEventById = await updateEventById(req.params.id, updateEvent); // Busca y modifica el usuario por su ID
 

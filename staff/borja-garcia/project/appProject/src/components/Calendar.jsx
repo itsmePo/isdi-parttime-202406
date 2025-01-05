@@ -1,12 +1,23 @@
 import { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import moment from "moment";
 import "../styles/calendar.css"; // Archivo CSS separado para estilos
+import { useAuth } from "../context/AuthContext";
+import createEvent from "../logic/createEvent";
 
 const localizer = momentLocalizer(moment);
-
 const CalendarComponent = () => {
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const { userId } = useAuth(); // Obtiene el ID del usuario logueado
+  useEffect(() => {
+    if (!userId) {
+      navigate("/login");
+    }
+  }, [userId, navigate]);
+
   const [events, setEvents] = useState([]);
   const [newEvent, setNewEvent] = useState({
     title: "",
@@ -14,10 +25,41 @@ const CalendarComponent = () => {
     end: "",
     category: "",
   });
+
   const [showForm, setShowForm] = useState(false); //Sabe si está abierto el form
   const formRef = useRef(null); // Genera una referencia para saber si está abierto el form
 
   const categories = ["Ansiedad", "Ataque de Pánico", "Autolesión", "Otro"];
+
+  const createCalendarEvent = async (
+    eventName,
+    startDateTime,
+    duration,
+    color,
+    category,
+    userId
+  ) => {
+    try {
+      await createEvent(
+        eventName,
+        startDateTime,
+        duration,
+        color,
+        category,
+        userId
+      );
+      console.log("El evento fue creado correctamente");
+      setNewEvent({
+        eventName: "",
+        startDateTime: "",
+        duration: "",
+        category: "",
+      }); // Limpia los campos del formulario después de crear el evento
+    } catch (err) {
+      console.error("Error al crear el evento:", err);
+      setError(err.message || "Error al crear el evento");
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -26,37 +68,69 @@ const CalendarComponent = () => {
 
   const handleAddEvent = () => {
     if (newEvent.title && newEvent.start && newEvent.end && newEvent.category) {
+      const start = new Date(newEvent.start);
+      const end = new Date(newEvent.end);
+  
+      if (end <= start) {
+        alert("La fecha de fin debe ser posterior a la fecha de inicio.");
+        return;
+      }
+  
+      // Cálculo de duración
+      const durationInMs = end - start; // Diferencia en milisegundos
+      const durationInMinutes = Math.floor(durationInMs / (1000 * 60)); // Total de minutos
+      const hours = Math.floor(durationInMinutes / 60); // Horas completas
+      const minutes = durationInMinutes % 60; // Minutos restantes
+      const duration = `${hours}h ${minutes}m`; // Duración legible
+  
+      // Añadir evento al estado local
       setEvents((prevEvents) => [
         ...prevEvents,
         {
           title: `${newEvent.title} (${newEvent.category})`,
-          start: new Date(newEvent.start),
-          end: new Date(newEvent.end),
+          start,
+          end,
           category: newEvent.category,
+          duration, // Añadir duración al evento
         },
       ]);
+  
       setNewEvent({ title: "", start: "", end: "", category: "" });
       setShowForm(false); // Oculta el formulario después de añadir un evento
+  
+      // Crear evento en el backend
+      if (userId) {
+        createCalendarEvent(
+          newEvent.title,
+          newEvent.start,
+          durationInMs, // Usar la duración calculada
+          "red",
+          newEvent.category,
+          userId
+        );
+      } else {
+        setError("Inicia sesión para continuar");
+      }
     } else {
       alert("Por favor, completa todos los campos.");
     }
   };
 
-const handleCloseForm = () => {
+  const handleCloseForm = () => {
     setShowForm(false); // Oculta el formulario cuando se cierra
-}
+  };
 
-useEffect(() => {
+  useEffect(() => {
     const handleClickOutside = (event) => {
-        if (formRef.current && !formRef.current.contains(event.target)) {
-            setShowForm(false); // Oculta el formulario cuando se hace click fuera del mismo
-        }
+      if (formRef.current && !formRef.current.contains(event.target)) {
+        setShowForm(false); // Oculta el formulario cuando se hace click fuera del mismo
+      }
     };
 
     const handleEscape = (event) => {
-        if (event.key === "Escape") {
-            setShowForm(false); // Oculta el formulario cuando se presiona la tecla Esc
-        }
+      if (event.key === "Escape") {
+        setShowForm(false); // Oculta el formulario cuando se presiona la tecla Esc
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -67,8 +141,6 @@ useEffect(() => {
       document.removeEventListener("keydown", handleEscape);
     };
   }, []);
-
-
 
   return (
     <div style={{ padding: "20px" }}>
@@ -155,18 +227,19 @@ useEffect(() => {
               Añadir Evento
             </button>
             <button
-            onClick={handleCloseForm}
-            style={{
-              backgroundColor: "#f44336",
-              color: "white",
-              border: "none",
-              padding: "10px",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
-            Cerrar
-          </button>
+              onClick={handleCloseForm}
+              style={{
+                backgroundColor: "#f44336",
+                color: "white",
+                border: "none",
+                padding: "10px",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              Cerrar
+            </button>
+            {error && <p className="error">{error}</p>}
           </div>
         </div>
       )}
@@ -177,7 +250,12 @@ useEffect(() => {
         events={events}
         startAccessor="start"
         endAccessor="end"
-        style={{ height: "40vh", maxWidth: "400px", maxHeight: "400px", margin: "20px 0" }}
+        style={{
+          height: "40vh",
+          maxWidth: "400px",
+          maxHeight: "400px",
+          margin: "20px 0",
+        }}
         messages={{
           next: "Siguiente",
           previous: "Anterior",

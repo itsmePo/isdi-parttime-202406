@@ -21,6 +21,12 @@ const eventSchema = new mongoose.Schema({
     default: null, // Campo no requerido
     match: /^#([0-9A-F]{3}){1,2}$/i, // Validación para color HEX (opcional)
   },
+  category: {
+    type: String,
+    required: true,
+    enum: ['Ansiedad', 'Ataque de Pánico', 'Autolesión', 'Otro'], // Relación con la categoría del evento
+    default: 'Otro', // Relación por defecto si no se especifica nada
+  },
   user: {  // Relación con el modelo User
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

@@ -10,8 +10,9 @@ const Login = () => {
 
   const userLogin = async (email, password) => {
     try {
-      const token = userAuth(email, password); // Asegúrate de que userAuth devuelva el token
-      login(token);
+      const jsonToken = await userAuth(email, password); // Asegúrate de que userAuth devuelva el token
+      console.log("Token Login: " + jsonToken.token);
+      login(jsonToken.token);
       navigate("/home");
     } catch (err) {
       console.error("Error al iniciar sesión:", err);

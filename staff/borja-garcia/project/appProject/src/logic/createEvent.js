@@ -1,14 +1,14 @@
 import * as Errors from "../../errors";
 
-const createEvent = async (eventName, startDateTime, duration, color, userId) => {
+const createEvent = async (eventName, startDateTime, duration, color, category, userId) => {
     try {
-      const response = await fetch(`/api/events/users/${userId}}`, {
+      const response = await fetch(`/api/events/users/${userId}`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
           "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
         },
-        body: JSON.stringify({ eventName, startDateTime, duration, color }),
+        body: JSON.stringify({ eventName, startDateTime, duration, color, category }),
       });
 
       if (!response.ok) {
