@@ -14,9 +14,6 @@ const userAuth = (email, password) => {
   })
     .then((res) => {
       if (res.status === 200)
-        return res
-          .json()
-          .then((body) => sessionStorage.setItem("token", body.token));
       return res.json();
     })
     .catch((err) => {

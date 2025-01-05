@@ -1,12 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import userAuth from "../../logic/userAuth.js";
-import "../../styles/main.css"
+import "../../styles/main.css";
+import { useAuth } from "../../context/AuthContext";
+
+
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const userLogin = async (email, password) => {
     try {
-      userAuth(email, password);
+      const token = userAuth(email, password); // Asegúrate de que userAuth devuelva el token
+      login(token);
       navigate("/home");
     } catch (err) {
       console.error("Error al iniciar sesión:", err);
@@ -30,11 +35,15 @@ const Login = () => {
         </div>
         <form onSubmit={handleSubmit} className="form">
           <input type="email" name="email" placeholder="E-Mail" required />
-          <input type="password" name="password" placeholder="Contraseña" required />
+          <input
+            type="password"
+            name="password"
+            placeholder="Contraseña"
+            required
+          />
           <button type="submit">Iniciar Sesión</button>
           <p>
-            ¿Sin cuenta?{" "}
-            <a href="/register">¡Regístrate aquí!</a>
+            ¿Sin cuenta? <a href="/register">¡Regístrate aquí!</a>
           </p>
         </form>
       </div>

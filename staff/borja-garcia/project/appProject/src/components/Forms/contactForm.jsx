@@ -1,15 +1,25 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import createEmergencyContact from "../../logic/createEmergencyContact";
 import "../../styles/main.css";
+import { useAuth } from "../../context/AuthContext";
+
 
 const RegisterEmergencyContact = () => {
     const navigate = useNavigate();
     const [error, setError] = useState("");
 
-    const createEmergencyContactFunc = async (name, phone, relationship) => {
+    const { userId } = useAuth();
+
+    useEffect(() => {
+        if (!userId) {
+            navigate("/login");
+        }
+    }, [userId, navigate]);
+
+    const createEmergencyContactFunc = async (name, phone, relationship, userId) => {
         try {
-            await createEmergencyContact(name, phone, relationship);
+            await createEmergencyContact(name, phone, relationship, userId);
             console.log("El contacto de emergencia fue creado correctamente");
             navigate("/home");
         } catch (err) {
@@ -27,7 +37,11 @@ const RegisterEmergencyContact = () => {
         const relationship = event.target.relationship.value;
 
         setError("");
-        createEmergencyContactFunc(name, phone, relationship);
+        if (userId) {
+        createEmergencyContactFunc(name, phone, relationship, userId);
+        } else {
+            setError("Inicia sesión para continuar")
+        }
     };
     
     return (
@@ -41,7 +55,7 @@ const RegisterEmergencyContact = () => {
                     <input type="text" name="name" placeholder="Nombre completo" required />
                     <input type="tel" name="phone" placeholder="Teléfono" required />
                     <select name="relationship" required>
-                        <option value="" disabled selected>Selecciona la relación</option>
+                        <option value="" disabled>Selecciona la relación</option>
                         {categories.map((category, index) => (
                             <option key={index} value={category}>
                                 {category}
