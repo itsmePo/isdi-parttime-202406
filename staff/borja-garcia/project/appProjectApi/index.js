@@ -5,6 +5,7 @@ import cors from "cors";
 import userController from "./controllers/userController.js";
 import eventController from "./controllers/eventController.js";
 import contactController from "./controllers/contactController.js";
+import errorHandler from "./middlewares/errorHandler.js";
 // Conexión a MongoDB
 connect(process.env.MONGODB_URI)
   .then(() => {
@@ -21,7 +22,7 @@ connect(process.env.MONGODB_URI)
     api.use("/users", userController); // Prefijo para las rutas de usuarios
     api.use("/events", eventController);
     api.use("/emergency-contacts", contactController); // Prefijo para las rutas de contactos de emergencia
-
+    api.use(errorHandler);
     // Ruta base
     api.get("/", (req, res) => {
       res.send("Hello, World!");

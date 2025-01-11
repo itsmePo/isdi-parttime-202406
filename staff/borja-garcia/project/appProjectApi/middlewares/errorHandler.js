@@ -1,22 +1,40 @@
-import { Errors } from "social-common";
-
+import * as Errors from "../errors/errors.js";
+import mongoose from "mongoose";
 export default (error, req, res, next) => {
-    let code = 500;
+  let code = 500;
+  if (
+    error instanceof Errors.EmailNotValidError ||
+    error instanceof Errors.PasswordNotValidError ||
+    error instanceof Errors.BadRequestError ||
+    error instanceof Errors.DuplicityError ||
+    error instanceof Errors.SaveError ||
+    error instanceof Errors.DeleteError ||
+    error instanceof Errors.CastError
+  ) {
+    code = 400;
+    // Bad Request
+  }
+  if (
+    error instanceof Errors.CredentialsError ||
+    error instanceof Errors.AuthError
+  ) {
+    code = 401;
+    // No autorizado
+  }
+  if (error instanceof Errors.UpdateError) {
+    code = 409;
+    // Conflicto de datos
+  }
+  if (error instanceof Errors.ExistenceError ||
+      error instanceof Errors.NotFoundError 
+  ) {
+    code = 404;
+    // No encontrado
+  }
 
-    if (error instanceof Errors.EmailNotValidError || error instanceof Errors.PasswordNotValidError) {
-        code = 400;
-    }
-    if (error instanceof Errors.CredentialsError || error instanceof Errors.AuthError) {
-        code = 401;
-    }
-    if (error instanceof Errors.DuplicityError) {
-        code = 409;
-    }
-    if (error instanceof Errors.ExistenceError) {
-        code = 404;
-    }
+  console.error(error);
 
-    console.error(error)
-
-    res.status(code).json({ name: error.constructor.name, message: error.message });
-}
+  res
+    .status(code)
+    .json({ name: error.constructor.name, message: error.message });
+};

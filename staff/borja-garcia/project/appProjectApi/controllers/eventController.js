@@ -11,7 +11,7 @@ import { getUserById, saveUserEvent } from "../services/userService.js";
 const router = express.Router();
 
 // Crear un evento
-router.post("/users/:userId", async (req, res) => {
+router.post("/users/:userId", async (req, res, next) => {
   try {
     const eventData = {
       eventName: req.body.eventName,
@@ -24,84 +24,52 @@ router.post("/users/:userId", async (req, res) => {
 
     // Verifica que el usuario exista
     const user = await getUserById(req.params.userId);
-    if (!user) {
-      return res.status(404).json({ error: "Usuario no encontrado" });
-    }
-
     const savedEvent = await createEvent(eventData);
     await saveUserEvent(user, savedEvent); // Guarda el evento en la base de datos
 
     res.status(200).json({ message: "Evento creado correctamente" });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Error al crear el evento" });
+    next(error)
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res, next) => {
   try {
     const event = await getEventById(req.params.id);
-    if (!event) {
-      return res.status(404).json({ message: "Evento no encontrado" }); // Respuesta si el evento no existe
-    }
-
     res.status(200).json(event);
-  } catch (err) {
-    res.status(500).json({ message: "Error al obtener el evento" });
-  }
+  } catch (error) {
+    next(error)  }
 });
 
 // Obtener todos los eventos
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
   try {
     const events = await getEvents();
-    if (!events || events.length === 0) {
-      return res.status(404).json({ message: "No existen eventos" });
-    }
     res.status(200).json(events);
   } catch (error) {
-    res.status(500).json({ message: "Error al obtener los eventos" });
-  }
+    next(error)  }
 });
 
-router.get("/users/:userId", async (req, res) => {
+router.get("/users/:userId", async (req, res, next) => {
   try {
-    const user = await getUserById(req.params.userId); // Busca por ID
-    if (!user) {
-      return res.status(404).json({
-        message: "El usuario no existe",
-      });
-    }
-
+    await getUserById(req.params.userId); // Busca por ID
     const events = await getEventsByUserId(req.params.userId);
-    if (events.length === 0) {
-      return res.status(404).json({
-        message: "No existen eventos de este usuario",
-      });
-    }
     res.status(200).json(events);
-  } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Error al obtener los eventos del usuario" });
+  } catch (error) {
+    next(error)
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req, res, next) => {
   try {
-    const deletedEvent = await deleteEventById(req.params.id); // Busca y elimina el usuario por su ID
-
-    if (!deletedEvent) {
-      return res.status(404).json({ message: "Evento no encontrado" }); // Respuesta si el usuario no existe
-    }
+    await deleteEventById(req.params.id); // Busca y elimina el usuario por su ID
 
     res.status(200).json({ message: "Evento eliminado correctamente" });
   } catch (error) {
-    res.status(400).json({ error: error.message }); // Manejo de errores
-  }
+    next(error)  }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", async (req, res, next) => {
   try {
     const updateEvent = {
       eventName: req.body.eventName,
@@ -110,16 +78,11 @@ router.put("/:id", async (req, res) => {
       color: req.body.color,
       category: req.body.category
     };
-    const modifyEventById = await updateEventById(req.params.id, updateEvent); // Busca y modifica el usuario por su ID
-
-    if (!modifyEventById) {
-      return res.status(404).json({ message: "Evento no encontrado" }); // Respuesta si el usuario no existe
-    }
+    await updateEventById(req.params.id, updateEvent); // Busca y modifica el usuario por su ID
 
     res.status(200).json({ message: "Evento modificado correctamente" });
   } catch (error) {
-    res.status(500).json({ message: "Error al actualizar el evento" }); // Manejo de errores
-  }
+    next(error)  }
 });
 
 export default router;
