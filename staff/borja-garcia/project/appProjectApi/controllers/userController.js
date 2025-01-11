@@ -8,6 +8,7 @@ import {
   authUser
 } from "../services/userService.js"; // Importa funciones del controlador
 import jwt from "jsonwebtoken";
+import { userResponse } from "../responses/userResponse.js";
 
 const router = express.Router();
 
@@ -31,7 +32,7 @@ router.post("/", async (req, res, next) => {
 router.get("/", async (req, res, next) => {
   try {
     const users = await getUsers();
-    res.json(users);
+    res.json(userResponse(users));
   } catch (error) {
     next(error)  }
 });
@@ -51,7 +52,7 @@ router.get("/:userId", async (req, res, next) => {
     const { userId } = req.params; // Captura el parámetro dinámico desde la ruta
     const fetchUserById = await getUserById(userId); // Busca y elimina el usuario por su ID
 
-    res.json(fetchUserById);
+    res.json(userResponse(fetchUserById));
   } catch (error) {
     next(error)  }
 });
