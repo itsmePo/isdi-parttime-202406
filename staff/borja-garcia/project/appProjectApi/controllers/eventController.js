@@ -33,6 +33,7 @@ router.post("/users/:userId", async (req, res) => {
 
     res.status(200).json({ message: "Evento creado correctamente" });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Error al crear el evento" });
   }
 });

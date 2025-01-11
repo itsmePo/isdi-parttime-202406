@@ -19,7 +19,7 @@ const eventSchema = new mongoose.Schema({
   color: {
     type: String, // Color en formato HEX, RGB o nombre de color
     default: null, // Campo no requerido
-    match: /^#([0-9A-F]{3}){1,2}$/i, // Validación para color HEX (opcional)
+    //match: /^#([0-9A-F]{3}){1,2}$/i, // Validación para color HEX (opcional)
   },
   category: {
     type: String,

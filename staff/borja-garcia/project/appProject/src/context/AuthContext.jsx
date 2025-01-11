@@ -7,6 +7,8 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(sessionStorage.getItem("token"));
 
+//Añadir navigate aquí para evitar el 404 antes de home
+
   const login = (newToken) => {
     setToken(newToken);
     sessionStorage.setItem("token", newToken);

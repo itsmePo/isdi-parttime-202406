@@ -19,7 +19,7 @@ const emergencyContactSchema = new mongoose.Schema({
     type: String,
     required: false,
     trim: true,
-    enum: ['Familiar', 'Amigo', 'Pareja', 'Otro'], // Relación con el contacto
+    enum: ['Familiar', 'Amigo', 'Pareja', 'Personal Médico', 'Otro'], // Relación con el contacto
     default: 'Otro', // Relación por defecto si no se especifica nada
   },
   user: {
