@@ -1,24 +1,43 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import moment from "moment";
 import "../styles/calendar.css"; // Archivo CSS separado para estilos
-import { useAuth } from "../context/AuthContext";
 import createEvent from "../logic/createEvent";
+import getEventsByUser from "../logic/getEventsByUser";
+import PropTypes from 'prop-types';
 
 const localizer = momentLocalizer(moment);
-const CalendarComponent = () => {
-  const navigate = useNavigate();
-  const [error, setError] = useState("");
-  const { userId } = useAuth(); // Obtiene el ID del usuario logueado
-  useEffect(() => {
-    if (!userId) {
-      navigate("/login");
-    }
-  }, [userId, navigate]);
 
+const getCalendarEvent = async (userId, setEvents, setError) => {
+  try {
+    const fetchedEvents = await getEventsByUser(userId);
+
+    const formattedEvents = fetchedEvents.map((event) => ({
+      id: event._id,
+      title: event.eventName,
+      start: new Date(event.startDateTime),
+      end: new Date(event.startDateTime + event.duration * 60000), // Añadir duración al evento
+      allDay: event.duration === null,
+      color: event.color,
+      category: event.category,
+    }));
+
+    setEvents(formattedEvents);
+  } catch (err) {
+    console.error("Error al obtener los eventos:", err);
+    setError(err.message || "Error al obtener los eventos");
+  }
+}
+
+const CalendarComponent = ({ userId }) => {
   const [events, setEvents] = useState([]);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    getCalendarEvent(userId, setEvents, setError)
+  }, [userId]);
+
   const [newEvent, setNewEvent] = useState({
     title: "",
     start: "",
@@ -60,6 +79,8 @@ const CalendarComponent = () => {
       setError(err.message || "Error al crear el evento");
     }
   };
+
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -269,6 +290,10 @@ const CalendarComponent = () => {
       />
     </div>
   );
+};
+
+CalendarComponent.propTypes = {
+  userId: PropTypes.string.isRequired,
 };
 
 export default CalendarComponent;
