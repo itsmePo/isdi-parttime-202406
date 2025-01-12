@@ -3,28 +3,35 @@ import bcrypt from "bcrypt";
 import * as Errors from "../errors/errors.js";
 import mongoose from "mongoose";
 
-// Crear un usuario
 export const createUser = async (userObject) => {
-  // Comparar las contraseñas en texto plano antes de cifrarlas
-  if (userObject.pwd !== userObject.repeatPwd)
-    throw new Errors.PasswordNotValidError("Las contraseñas no coinciden");
+  try {
+    // Comparar las contraseñas en texto plano antes de cifrarlas
+    if (userObject.password !== userObject.repeatPassword) {
+      throw new Errors.PasswordNotValidError("Las contraseñas no coinciden");
+    }
 
-  // Cifrar la contraseña solo después de la validación
-  const hashedPwd = await bcrypt.hash(userObject.pwd, 10);
+    // Cifrar la contraseña solo después de la validación
+    const hashedPwd = await bcrypt.hash(userObject.password, 10);
 
-  // Crear el objeto userData con la contraseña cifrada
-  const userData = {
-    username: userObject.username,
-    email: userObject.email,
-    password: hashedPwd,
-  };
+    // Crear el objeto userData con la contraseña cifrada
+    const userData = {
+      username: userObject.username.trim(),
+      email: userObject.email.trim(),
+      password: hashedPwd,
+    };
 
-  // Guardar el usuario en la base de datos
-  const user = new User(userData);
-  const savedUser = await user.save();
-  if (!savedUser)
-    throw new Errors.SaveError("No se ha podido guardar el usuario");
-  return savedUser;
+    // Guardar el usuario en la base de datos
+    const user = new User(userData);
+    const savedUser = await user.save();
+    if (!savedUser) {
+      throw new Errors.SaveError("No se ha podido guardar el usuario.");
+    }
+
+    return savedUser; // Devuelve el usuario guardado en caso de éxito
+  } catch (error) {
+    // Maneja cualquier error durante el proceso
+    throw new Errors.SaveError("Error al procesar el usuario: " + error.message);
+  }
 };
 
 // Obtener todos los usuarios

@@ -18,7 +18,7 @@ export const createContact = async (user, contactData) => {
 // Obtener todos los contactos
 export const getContacts = async () => {
   const contactsFound = await EmergencyContact.find();
-  if (!contactsFound)
+  if (!contactsFound || contactsFound.length === 0)
     throw new Errors.NotFoundError("No se encontraron contactos de emergencia");
   return contactsFound;
 };

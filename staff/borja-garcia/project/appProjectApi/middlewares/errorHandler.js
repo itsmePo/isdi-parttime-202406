@@ -1,5 +1,4 @@
 import * as Errors from "../errors/errors.js";
-import mongoose from "mongoose";
 export default (error, req, res, next) => {
   let code = 500;
   if (
