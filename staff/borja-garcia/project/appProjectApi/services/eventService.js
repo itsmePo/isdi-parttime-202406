@@ -2,8 +2,8 @@ import Event from "../models/events.js";
 import * as Errors from "../errors/errors.js";
 import mongoose from "mongoose";
 
-export const createEvent = async (eventObject) => {
-  const { userId, ...eventData } = eventObject;
+export const createEvent = async (eventObject, userId) => {
+  const { ...eventData } = eventObject;
 
   // Crear y guardar el evento
   const event = new Event({

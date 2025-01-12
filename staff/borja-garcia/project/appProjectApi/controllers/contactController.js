@@ -9,16 +9,16 @@ import {
 } from "../services/contactService.js";
 import { getUserById, saveUserContact } from "../services/userService.js";
 import { contactResponse } from "../responses/contactResponse.js";
+import {
+  createEmergencyContactRequest,
+  updateEmergencyContactRequest,
+} from "../requests/contactRequest.js";
 const router = express.Router();
 
 // Ruta para agregar un contacto de emergencia vinculado a un usuario
 router.post("/users/:userId", async (req, res, next) => {
   try {
-    const contactData = {
-      contactName: req.body.contactName,
-      phone: req.body.phone,
-      relationship: req.body.relationship,
-    };
+    const contactData = await createEmergencyContactRequest(req.body);
     // Verificar que el usuario exista
     const user = await getUserById(req.params.userId);
     // Crear el contacto de emergencia
@@ -74,11 +74,7 @@ router.delete("/:id", async (req, res, next) => {
 // Ruta para actualizar un contacto de emergencia
 router.put("/:id", async (req, res, next) => {
   try {
-    const contactData = {
-      contactName: req.body.contactName,
-      phone: req.body.phone,
-      relationship: req.body.relationship,
-    };
+    const contactData = await updateEmergencyContactRequest(req.body);
     await updateContactById(req.params.id, contactData);
 
     res.status(200).json({ message: "Contacto de emergencia actualizado" });
