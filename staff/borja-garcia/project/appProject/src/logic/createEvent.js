@@ -1,8 +1,8 @@
 import * as Errors from "../../errors";
 
-const createEvent = async (eventName, startDateTime, duration, color, category, userId) => {
+const createEvent = async (eventName, startDateTime, duration, color, category) => {
     try {
-      const response = await fetch(`/api/events/users/${userId}`, {
+      const response = await fetch(`/api/events/users/`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",

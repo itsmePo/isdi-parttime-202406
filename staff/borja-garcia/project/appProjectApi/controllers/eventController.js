@@ -1,4 +1,5 @@
 import express from "express";
+import jwt from "jsonwebtoken";
 import {
   createEvent,
   deleteEventById,
@@ -16,11 +17,13 @@ import {
 const router = express.Router();
 
 // Crear un evento
-router.post("/users/:userId", async (req, res, next) => {
+router.post("/users/", async (req, res, next) => {
   try {
     const eventData = await createEventRequest(req.body);
     // Verifica que el usuario exista
-    const user = await getUserById(req.params.userId);
+    const token = req.headers.authorization;
+    const { userId } = jwt.verify(token.split(" ")[1], process.env.JWT_SECRET);
+    const user = await getUserById(userId);
     const savedEvent = await createEvent(eventData, user.id);
     await saveUserEvent(user, savedEvent); // Guarda el evento en la base de datos
 
@@ -49,10 +52,12 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/users/:userId", async (req, res, next) => {
+router.get("/users/user", async (req, res, next) => {
   try {
-    await getUserById(req.params.userId); // Busca por ID
-    const events = await getEventsByUserId(req.params.userId);
+    const token = req.headers.authorization;
+    const { userId } = jwt.verify(token.split(" ")[1], process.env.JWT_SECRET);
+    await getUserById(userId); // Busca por ID
+    const events = await getEventsByUserId(userId);
     res.status(200).json(eventResponse(events));
   } catch (error) {
     next(error);

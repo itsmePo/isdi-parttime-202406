@@ -9,34 +9,44 @@ import PropTypes from 'prop-types';
 
 const localizer = momentLocalizer(moment);
 
-const getCalendarEvent = async (userId, setEvents, setError) => {
+const getCalendarEvent = async (setEvents) => {
   try {
-    const fetchedEvents = await getEventsByUser(userId);
+    const fetchedEvents = await getEventsByUser();
 
     const formattedEvents = fetchedEvents.map((event) => ({
-      id: event._id,
-      title: event.eventName,
+      title: `${event.eventName} (${event.category})`,
       start: new Date(event.startDateTime),
-      end: new Date(event.startDateTime + event.duration * 60000), // Añadir duración al evento
+      end: new Date(new Date(event.startDateTime) + event.duration * 60000), // Añadir duración al evento
       allDay: event.duration === null,
       color: event.color,
       category: event.category,
+      duration: event.duration
+      /**{
+          title: `${newEvent.title} (${newEvent.category})`,
+          start,
+          end,
+          category: newEvent.category,
+          duration, // Añadir duración al evento
+        }, */
     }));
 
-    setEvents(formattedEvents);
+    return formattedEvents
   } catch (err) {
+    setEvents([]);
     console.error("Error al obtener los eventos:", err);
-    setError(err.message || "Error al obtener los eventos");
   }
 }
 
-const CalendarComponent = ({ userId }) => {
-  const [events, setEvents] = useState([]);
+const CalendarComponent = () => {
+  const [events, setEvents] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    getCalendarEvent(userId, setEvents, setError)
-  }, [userId]);
+    getCalendarEvent(setEvents).then((formattedEvents) => {
+      setEvents(formattedEvents);
+    }).catch(error => console.log(error.message))
+    
+   }, []);
 
   const [newEvent, setNewEvent] = useState({
     title: "",
@@ -87,7 +97,7 @@ const CalendarComponent = ({ userId }) => {
     setNewEvent((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleAddEvent = () => {
+  const handleAddEvent = async () => {
     if (newEvent.title && newEvent.start && newEvent.end && newEvent.category) {
       const start = new Date(newEvent.start);
       const end = new Date(newEvent.end);
@@ -120,24 +130,22 @@ const CalendarComponent = ({ userId }) => {
       setShowForm(false); // Oculta el formulario después de añadir un evento
   
       // Crear evento en el backend
-      if (userId) {
-        createCalendarEvent(
+
+      await createCalendarEvent(
           newEvent.title,
           newEvent.start,
           durationInMs, // Usar la duración calculada
-          "red",
+          "#FFFFFF",
           newEvent.category,
-          userId
         );
-      } else {
-        setError("Inicia sesión para continuar");
-      }
+      
     } else {
       alert("Por favor, completa todos los campos.");
     }
   };
 
   const handleCloseForm = () => {
+    console.log(events)
     setShowForm(false); // Oculta el formulario cuando se cierra
   };
 
@@ -266,7 +274,7 @@ const CalendarComponent = ({ userId }) => {
       )}
 
       {/* Calendario */}
-      <Calendar
+      {events && <Calendar
         localizer={localizer}
         events={events}
         startAccessor="start"
@@ -287,9 +295,8 @@ const CalendarComponent = ({ userId }) => {
           agenda: "Agenda",
           noEventsInRange: "No hay eventos en este rango.",
         }}
-      />
-    </div>
-  );
+      />}
+    </div> );
 };
 
 CalendarComponent.propTypes = {

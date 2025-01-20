@@ -1,12 +1,12 @@
 import * as Errors from "../../errors/";
 
-const getEventsByUser = async (userId) => {
+const getEventsByUser = async () => {
   try {
     const token = sessionStorage.getItem("token");
     if (!token) {
       throw new Errors.BadRequestError("User not logged in");
     }
-    const response = await fetch(`/api/events/user/${userId}`, {
+    const response = await fetch(`/api/events/users/user`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
