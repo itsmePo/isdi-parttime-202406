@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { describe, it, before, afterEach, after } from "mocha";
 import { expect } from "chai";
-import * as service from "../services/contactService.js";
+import * as service from "./contactService.js";
 import EmergencyContact from "../models/contacts.js";
 import "dotenv/config";
 

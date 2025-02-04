@@ -13,7 +13,7 @@ import {
   createUserRequest,
   updateUserRequest,
 } from "../requests/userRequest.js";
-
+import verifyToken from "../middlewares/verifyToken.js"
 const router = express.Router();
 
 // Crear un usuario
@@ -48,10 +48,10 @@ router.delete("/:userId", async (req, res, next) => {
   }
 });
 
-router.get("/:userId", async (req, res, next) => {
+router.get("/byId", verifyToken, async (req, res, next) => {
   try {
-    const { userId } = req.params; // Captura el parámetro dinámico desde la ruta
-    const fetchUserById = await getUserById(userId); // Busca y elimina el usuario por su ID
+    // cambio para pasar token debajo const { userId } = req.params; 
+    const fetchUserById = await getUserById(req.id); 
 
     res.json(userResponse(fetchUserById));
   } catch (error) {
@@ -74,7 +74,7 @@ router.post("/auth", async (req, res, next) => {
   try {
     const user = await authUser(req.body.email, req.body.password);
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "24h", // test for inactivity
     });
     res.status(200).json({ token: token });
   } catch (error) {

@@ -22,11 +22,11 @@ export const createUser = async (userObject) => {
 
     // Guardar el usuario en la base de datos
     const user = new User(userData);
-    const savedUser = await user.save();
-    if (!savedUser) {
-      throw new Errors.SaveError("No se ha podido guardar el usuario.");
+    const savedUser = await user.save().catch(error => {
+    if (error.code === 11000) {
+      throw new Errors.DuplicityError("El nombre de usuario o el email ya existen");
     }
-
+  });
     return savedUser; // Devuelve el usuario guardado en caso de éxito
   } catch (error) {
     // Maneja cualquier error durante el proceso
